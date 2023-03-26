@@ -20,7 +20,7 @@ const ViewDaycare = () => {
     const checkOut = async (id) => {
     try {
       await axios.delete(`${baseURL}/checkout/${id}`);
-      const new_list = daycare_list.filter(attendee => attendee.id != id)
+      const new_list = daycare_list.filter(attendee => attendee.id !== id)
       setDaycare(new_list);
     } catch (er) {
       console.error(er.message);
@@ -28,15 +28,14 @@ const ViewDaycare = () => {
   }
 
     const getDaycare = async () => {
-        const data = await axios.get(`${baseURL}/daycare_list`);
-        const daycare = data.data
-        setDaycare(daycare)
-        
-        console.log("data",data.data)
-        console.log("daycare",daycare)
-        console.log("list", daycare_list)
-        console.log("type", typeof(daycare_list))
-
+      axios
+        .get(`${baseURL}/daycare_list`)
+        .then(res => {
+          setDaycare(res.data['Daycare List'])
+        })
+        .catch(err => {
+          console.log(err)
+        }, [])
     }
 
     useEffect(() => {
@@ -62,6 +61,7 @@ const ViewDaycare = () => {
 
     return (
         <div>
+            <h1>Daycare</h1>
             <ul>
               {daycare_list?.map(attendee => {
                 if (attendeeId === attendee.id){
@@ -73,7 +73,7 @@ const ViewDaycare = () => {
                   </li>)
                 }
                 else { return (
-                  <li key={attendee.id}>Name: {attendee.child_name}
+                  <li key={attendee.id}>Name: {attendee.child_name}, Pick up time: {attendee.pickup_time}, Note: {attendee.note}
                     <button onClick={() => checkOut(attendee.id)}>Check Out</button>
                     <button onClick={() => edit(attendee)}>Edit</button>
                   </li>
