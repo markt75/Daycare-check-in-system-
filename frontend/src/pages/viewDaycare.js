@@ -1,8 +1,10 @@
 import React from "react";
+import axios from "axios";
+import { useState, useEffect } from 'react'
 
 const baseURL = "http://localhost:5000"
 
-const viewDaycare = () => {
+const ViewDaycare = () => {
     const [daycare_list, setDaycare] = useState([]);
 
     const [editTime, setEditTime] = useState("");
@@ -81,3 +83,5 @@ const viewDaycare = () => {
         </div>
     )
 }
+
+export default ViewDaycare;

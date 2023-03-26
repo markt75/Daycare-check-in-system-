@@ -3,12 +3,34 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import CheckIn from './pages/checkin';
+import ViewDaycare from './pages/viewDaycare';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App/>,
+  },
+  {
+    path: "CheckIn",
+    element: <CheckIn/>,
+  },
+  {
+    path: "ViewDaycare",
+    element: <ViewDaycare/>,
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <RouterProvider router={router}/>
+  // <React.StrictMode>
+  //   <App />
+  // </React.StrictMode>,
   // document.getElementById('root')
 );
 

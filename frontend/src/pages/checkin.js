@@ -1,9 +1,10 @@
 import axios from "axios";
 import React from "react";
+import { useState } from 'react'
 
 const baseURL = "http://localhost:5000"
 
-const checkIn = () => {
+const CheckIn = () => {
 
     const [name, setName] = useState("");
     const [pickup_time, setPickup] = useState("");
@@ -46,4 +47,4 @@ const checkIn = () => {
     )
 }
 
-export default checkIn;
+export default CheckIn;
