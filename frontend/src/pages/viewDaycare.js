@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from 'react'
+import { da } from "date-fns/locale";
 
 const baseURL = "http://localhost:5000"
 
@@ -50,10 +51,24 @@ const ViewDaycare = () => {
     setEditNote(bkend.target.value)
     }
 
-    const submit = async (bkend, id) => {
+    const submit = async (bkend) => {
     bkend.preventDefault();
     try {
-      const data = await axios.put(`${baseURL}/edit/${id}`, {'pickup_time':editTime, 'note':editNote});
+      await axios.put(`${baseURL}/edit/${attendeeId}`, {"pickup_time":editTime, "note":editNote});
+      const newDaycare_list = daycare_list.map(attendee => {
+        if (attendee.id == attendeeId) {
+          return {
+            ...attendee,
+            pickup_time: editTime,
+            note: editNote
+          };
+        }
+        return attendee
+      });
+      setDaycare(newDaycare_list)
+      setAttendeeId(null)
+      setEditTime("")
+      setEditNote("")
     } catch (er) {
       console.error(er.message)
     }
@@ -69,6 +84,7 @@ const ViewDaycare = () => {
                     <form onSubmit={submit} key={attendee.id}>
                       <input onChange={changeEditPTime} type="text" name="editPickup" value={editTime}/>
                       <input onChange={changeEditNote} type="text" name="editNote" value={editNote}/>
+                      <button type="submit">Submit</button>
                     </form>
                   </li>)
                 }
