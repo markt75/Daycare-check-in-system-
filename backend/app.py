@@ -1,23 +1,17 @@
 from flask import Flask, request
-from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from uuid import uuid4
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:SQLdbpass@localhost/daycare-check-in"
-# app.config["SECRETE_KEY"] = "secrete_key"
 db = SQLAlchemy(app)
 CORS(app)
-
-# with app.app_context():
-#     db.create_all()
 
 class Backend(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     child_name = db.Column(db.String(50), nullable=False)
-    pickup_time = db.Column(db.String(10))
-    note = db.Column(db.String(500))
+    pickup_time = db.Column(db.String(6))
+    note = db.Column(db.String(100))
 
     def __repr__(self):
         return f'Rep: {self.child_name}'
@@ -63,12 +57,19 @@ def checkOut(id):
     db.session.commit()
     return 'Checked Out'
 
-@app.route('/edit/<id>', methods=['PUT'])
-def edit(id):
+@app.route('/edit-pickup-time/<id>', methods=['PUT'])
+def edit_time(id):
     backend = Backend.query.filter_by(id=id)
     pickup_time = request.json['pickup_time']
+    backend.update(dict(pickup_time=pickup_time))
+    db.session.commit()
+    return {'Edited successfully': to_json(backend.one())}
+
+@app.route('/edit-note/<id>', methods=['PUT'])
+def edit_note(id):
+    backend = Backend.query.filter_by(id=id)
     note = request.json['note']
-    backend.update(dict(pickup_time=pickup_time, note=note))
+    backend.update(dict(note=note))
     db.session.commit()
     return {'Edited successfully': to_json(backend.one())}
 
