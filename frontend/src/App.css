@@ -6,15 +6,11 @@
 
 .home-header {
   position: absolute;
-  left: 0%;
-  right: 0%;
-  top: 0%;
-  bottom: 0%;
+  margin: auto;
 
   background: #42DFB0;
 
   font-family: 'Jua';
-  position: absolute;
   text-align: center;
   width: 100%;
   height: 10%;
@@ -26,6 +22,7 @@
 }
 
 #welcome-message {
+  margin-top: 80px;
   white-space: nowrap;
   font-size: 56px;
 }
@@ -33,7 +30,6 @@
 .home, .checkin-page, .daycare-page {
   margin: auto;
   padding-top: 5%;
-  padding-bottom: 20%;
   position: relative;
  
   text-align: center;
@@ -42,6 +38,10 @@
   font-size: 48px;
   line-height: 60px;
   color: #000000;
+}
+
+#view {
+  margin-top: 8%;
 }
 
 a {
@@ -64,8 +64,8 @@ a {
 
   height: 80px;
   width: 500px;
-  position: absolute;
-  left: 38%;
+  position: relative;
+  margin-top: 50px;
 
   text-align: center;
   font-family: 'Jua';
@@ -83,14 +83,14 @@ a {
 #home-page-checkin, #home-page-daycare {
   width: 400px;
   font-size: 36px;
-  position: absolute;
-  margin-left: 1.5%;
+  position: relative;
+  margin-left: 4%;
   justify-content: center;
   align-items: center;
 }
 
 #home-page-checkin {
-  bottom: 50px;
+  margin-top: 70px;
 }
 
 button:hover {
