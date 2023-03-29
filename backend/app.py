@@ -10,7 +10,7 @@ CORS(app)
 class Backend(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     child_name = db.Column(db.String(50), nullable=False)
-    pickup_time = db.Column(db.String(6))
+    pickup_time = db.Column(db.String(8))
     note = db.Column(db.String(100))
 
     def __repr__(self):
