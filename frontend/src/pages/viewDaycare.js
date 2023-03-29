@@ -12,10 +12,21 @@ const ViewDaycare = () => {
     const [editNote, setEditNote] = useState("");
     const [attendeeId, setAttendeeId] = useState(null);
 
-    const edit = (bkend) => {
+    const [edit_time_active, setEdit_time_active] = useState(false);
+    const [edit_note_active, setEdit_note_active] = useState(false);
+
+    const edit_time = (bkend) => {
+      setEdit_time_active(true);
       setAttendeeId(bkend.id);
       setEditTime(bkend.pickup_time);
+      console.log(edit_time_active);
+    }
+
+    const edit_note = (bkend) => {
+      setEdit_note_active(true);
+      setAttendeeId(bkend.id);
       setEditNote(bkend.note);
+      console.log(edit_note_active);
     }
 
     const checkOut = async (id) => {
@@ -51,16 +62,15 @@ const ViewDaycare = () => {
     setEditNote(bkend.target.value)
     }
 
-    const submit = async (bkend) => {
+    const submit_time = async (bkend) => {
     bkend.preventDefault();
     try {
-      await axios.put(`${baseURL}/edit/${attendeeId}`, {"pickup_time":editTime, "note":editNote});
+      await axios.put(`${baseURL}/edit-pickup-time/${attendeeId}`, {"pickup_time":editTime});
       const newDaycare_list = daycare_list.map(attendee => {
         if (attendee.id === attendeeId) {
           return {
             ...attendee,
             pickup_time: editTime,
-            note: editNote
           };
         }
         return attendee
@@ -68,7 +78,29 @@ const ViewDaycare = () => {
       setDaycare(newDaycare_list)
       setAttendeeId(null)
       setEditTime("")
+      setEdit_time_active(false)
+    } catch (er) {
+      console.error(er.message)
+    }
+    }
+
+    const submit_note = async (bkend) => {
+      bkend.preventDefault();
+      try {
+      await axios.put(`${baseURL}/edit-note/${attendeeId}`, {"note":editNote});
+      const newDaycare_list = daycare_list.map(attendee => {
+        if (attendee.id === attendeeId) {
+          return {
+            ...attendee,
+            note: editNote
+          };
+        }
+        return attendee
+      });
+      setDaycare(newDaycare_list)
+      setAttendeeId(null)
       setEditNote("")
+      setEdit_note_active(false)
     } catch (er) {
       console.error(er.message)
     }
@@ -84,27 +116,52 @@ const ViewDaycare = () => {
             <h1>Daycare</h1>
             <ul>
               {daycare_list?.map(attendee => {
-                if (attendeeId === attendee.id){
-                  return (<li>
-                    <form onSubmit={submit} key={attendee.id}>
+                if (attendeeId === attendee.id && edit_time_active){
+                  return (<li> 
+                    <form onSubmit={submit_time} key={attendee.id}>
                       <input onChange={changeEditPTime} type="text" name="editPickup" value={editTime}/>
+                      <button type="submit" className="btn-daycare">Submit</button>
+                    </form>
+                  </li>)
+                }
+                if (attendeeId === attendee.id && edit_note_active){
+                  return (<li> 
+                    <form onSubmit={submit_note} key={attendee.id}>
                       <input onChange={changeEditNote} type="text" name="editNote" value={editNote}/>
-                      <button type="submit">Submit</button>
+                      <button type="submit" className="btn-daycare">Submit</button>
                     </form>
                   </li>)
                 }
                 else { return (
                   <li key={attendee.id}>
                     {attendee.pickup_time.length !== 0 && (
-                      <p><span className="list-item">Name:</span> {attendee.child_name}, <span className="list-item">Pick up time:</span>  {attendee.pickup_time} <button className="btn-daycare" onClick={() => checkOut(attendee.id)}>Check Out</button> <button className="btn-daycare" onClick={() => edit(attendee)}>Edit</button></p>
+                      <p>
+                        <span className="list-item">Name:</span> {attendee.child_name}, 
+                        <span className="list-item"> Pick up time:</span>  {attendee.pickup_time} 
+                        <button className="btn-daycare" onClick={() => checkOut(attendee.id)}>Check Out</button> 
+                        <button className="btn-daycare" onClick={() => edit_time(attendee)}>Edit Pickup Time</button>
+                        {attendee.note.length === 0 && (
+                          <button className="btn-daycare" onClick={() => edit_note(attendee)}>Add Note</button> 
+                        )}
+                      </p>
                     )}
 
                     {attendee.pickup_time.length === 0 && (
-                      <p><span className="list-item">Name:</span> {attendee.child_name} <button className="btn-daycare" onClick={() => checkOut(attendee.id)}>Check Out</button></p>
+                      <p>
+                        <span className="list-item">Name:</span> {attendee.child_name} 
+                        <button className="btn-daycare" onClick={() => checkOut(attendee.id)}>Check Out</button>
+                        
+                        {attendee.note.length === 0 && (
+                          <button className="btn-daycare" onClick={() => edit_note(attendee)}>Add Note</button> 
+                        )}
+                      </p>
                     )}
 
                     {attendee.note.length !== 0 && (
-                    <p id="note"><span className="list-item">Note:</span> {attendee.note} <button className="btn-daycare" onClick={() => edit(attendee)}>Edit</button> </p>
+                      <p id="note">
+                        <span className="list-item"> {attendee.child_name}'s Note:</span> {attendee.note} 
+                        <button className="btn-daycare" onClick={() => edit_note(attendee)}>Edit Note</button>
+                      </p>
                     )}
                   </li>
                   
