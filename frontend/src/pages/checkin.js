@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useState } from 'react'
+import { Link } from "react-router-dom";
 
 const baseURL = "http://localhost:5000"
 
@@ -33,6 +34,12 @@ const CheckIn = () => {
 
     return (
         <div>
+
+        <div className="home-header">
+          <h1 id="Title">Kidz Daycare</h1>
+        </div>
+
+        <div className="checkin-page">
             <h1>Checkin</h1>
             <form onSubmit={submit}>
                 <label htmlFor="name">Name: </label>
@@ -41,8 +48,13 @@ const CheckIn = () => {
                 <input onChange={changePTime} type="text" name="pickup" value={pickup_time}/><br></br>
                 <label htmlFor="note">Note (Optional): </label>
                 <input onChange={changeNote} type="text" name="note" value={note}/><br></br>
-                <button type="submit">Checkin</button>
-        </form>
+                <button type="submit" className="button" id="btn-checkin">Checkin</button>
+            </form>
+        
+        <button className="button" id="home-page-checkin"><Link to="/">Back to Home page</Link></button>
+
+        </div>
+            
         </div>
     )
 }

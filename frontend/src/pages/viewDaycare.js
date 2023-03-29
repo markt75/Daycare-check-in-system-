@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from 'react'
-import { da } from "date-fns/locale";
+import { Link } from "react-router-dom";
 
 const baseURL = "http://localhost:5000"
 
@@ -56,7 +56,7 @@ const ViewDaycare = () => {
     try {
       await axios.put(`${baseURL}/edit/${attendeeId}`, {"pickup_time":editTime, "note":editNote});
       const newDaycare_list = daycare_list.map(attendee => {
-        if (attendee.id == attendeeId) {
+        if (attendee.id === attendeeId) {
           return {
             ...attendee,
             pickup_time: editTime,
@@ -76,6 +76,11 @@ const ViewDaycare = () => {
 
     return (
         <div>
+          <div className="home-header">
+            <h1 id="Title">Kidz Daycare</h1>
+          </div>
+
+          <div className="daycare-page">
             <h1>Daycare</h1>
             <ul>
               {daycare_list?.map(attendee => {
@@ -89,13 +94,29 @@ const ViewDaycare = () => {
                   </li>)
                 }
                 else { return (
-                  <li key={attendee.id}>Name: {attendee.child_name}, Pick up time: {attendee.pickup_time}, Note: {attendee.note}
-                    <button onClick={() => checkOut(attendee.id)}>Check Out</button>
-                    <button onClick={() => edit(attendee)}>Edit</button>
+                  <li key={attendee.id}>
+                    {attendee.pickup_time.length !== 0 && (
+                      <p><span className="list-item">Name:</span> {attendee.child_name}, <span className="list-item">Pick up time:</span>  {attendee.pickup_time} <button className="btn-daycare" onClick={() => checkOut(attendee.id)}>Check Out</button> <button className="btn-daycare" onClick={() => edit(attendee)}>Edit</button></p>
+                    )}
+
+                    {attendee.pickup_time.length === 0 && (
+                      <p><span className="list-item">Name:</span> {attendee.child_name} <button className="btn-daycare" onClick={() => checkOut(attendee.id)}>Check Out</button></p>
+                    )}
+
+                    {attendee.note.length !== 0 && (
+                    <p id="note"><span className="list-item">Note:</span> {attendee.note} <button className="btn-daycare" onClick={() => edit(attendee)}>Edit</button> </p>
+                    )}
                   </li>
+                  
+
                 )}
               })}
             </ul>
+
+            <button className="button" id="home-page-daycare"><Link to="/">Back to Home page</Link></button>
+          </div>
+
+            
         </div>
     )
 }
